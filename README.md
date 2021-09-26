@@ -2,9 +2,10 @@
 
 irrn-template-loader is simple template loader which loads simple / **basic** bootsrap filess for various frameworks and languages.
 
-> use **sudo npm i -g irrn-template-loader** to install it globally and use the command anywhere.
-> Afer installing the package use **create-project [,options..]** to set the files for required language.
+    $ irrn-load <template-name,[javascript,typescript,express]> [-options]
 
+> use **sudo npm i -g irrn-template-loader** to install it globally and use the command anywhere.
+> Afer installing the package use **irrn-load [,options..]** to set the files for required language.
 > commands include:
 >
 > - [ ] --git - for initializing git

@@ -1,11 +1,11 @@
 {
   "name": "irrn-template-loader",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A test CLI to bootstrap files on cmd",
   "main": "src/index.js",
   "bin": {
     "@iamrahulrnair": "bin/create-project",
-    "create-project": "bin/create-project"
+    "irrn-load": "bin/create-project"
   },
   "publishConfig": {
     "access": "public"
