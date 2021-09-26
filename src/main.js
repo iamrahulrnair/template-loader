@@ -3,25 +3,20 @@ import fs from 'fs';
 import ncp from 'ncp';
 import path from 'path';
 import { promisify } from 'util';
-import execa from 'execa';
 import Listr from 'listr';
 import { projectInstall } from 'pkg-install';
+import { initGit } from './gitInit';
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
 async function copyTemplateFiles(options) {
-  return copy(options.templateDirectory, options.targetDirectory, {
-    clobber: false,
-  });
-}
-
-async function initGit(options) {
-  const result = execa('git', ['init'], {
-    cwd: options.targetDirectory,
-  });
-  if (result.failed) {
-    return Promise.reject(new Error('Failed to initialize Git'));
+  try {
+    return copy(options.templateDirectory, options.targetDirectory, {
+      clobber: false,
+    });
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -30,26 +25,26 @@ export async function createProject(options) {
     ...options,
     targetDirectory: options.targetDirectory || process.cwd(),
   };
-
   const currentFileUrl = import.meta.url;
   const templateDir = path.resolve(
     new URL(currentFileUrl).pathname,
     '../../templates',
     options.template.toLowerCase()
   );
-  console.log(templateDir);
 
   options.templateDirectory = templateDir;
 
   try {
     await access(templateDir, fs.constants.R_OK);
   } catch (error) {
-    console.error(`${chalk.red.bold('ERROR')},Invalid template name`);
+    console.error(
+      `${chalk.red.bold('ERROR!!')},template name ${chalk.redBright(
+        options.template.toUpperCase()
+      )} is invalid,Please check with documents for further details.`
+    );
     process.exit(1);
   }
 
-  // console.log('Copy project files..');
-  // await copyTemplateFiles(options);
   const tasks = new Listr([
     {
       title: 'Copy project files',
@@ -74,7 +69,6 @@ export async function createProject(options) {
   ]);
 
   await tasks.run();
-
   console.log(`${chalk.green.bold('DONE')},Project Ready!!`);
 
   return true;
